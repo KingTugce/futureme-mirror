@@ -1,167 +1,70 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
 
-type Entry = { id: string; content: string | null; created_at: string };
-type Reply = { id: string; entry_id: string; text: string; created_at: string };
+import { useState } from 'react';
+import { createClient } from '@/lib/supabase';         // you already have this
+import { reflect } from '@/lib/reflect';               // <— new helper
+import { useRouter } from 'next/navigation';
 
-export default function JournalPage() {
-  const [session, setSession] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [entries, setEntries] = useState<Entry[]>([]);
-  const [repliesByEntry, setRepliesByEntry] = useState<Record<string, Reply[]>>({});
-  const [text, setText] = useState('');
-  const [saving, setSaving] = useState(false);
-  const [thinking, setThinking] = useState<Record<string, boolean>>({});
+type Entry = {
+  id: string;
+  content: string;
+  created_at: string;
+};
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
-    return () => sub.subscription.unsubscribe();
-  }, []);
+export default function JournalPage(props: { entries: Entry[]; userId: string }) {
+  const { entries, userId } = props;
+  const supabase = createClient();
+  const router = useRouter();
+  const [busyId, setBusyId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!session) return;
-    const load = async () => {
-      setLoading(true);
-      const { data: eData } = await supabase
-        .from('journal')
-        .select('id, content, created_at')
-        .eq('user_id', session.user.id)
-        .order('created_at', { ascending: false });
-
-      setEntries((eData ?? []) as Entry[]);
-
-      const { data: rData } = await supabase
-        .from('replies')
-        .select('id, entry_id, text, created_at')
-        .eq('user_id', session.user.id)
-        .order('created_at', { ascending: true });
-
-      const byEntry: Record<string, Reply[]> = {};
-      (rData ?? []).forEach((r: any) => {
-        byEntry[r.entry_id] ??= [];
-        byEntry[r.entry_id].push(r as Reply);
-      });
-      setRepliesByEntry(byEntry);
-      setLoading(false);
-    };
-    load();
-  }, [session]);
-
-  const save = async () => {
-    if (!session || !text.trim()) return;
-    setSaving(true);
-    const { data, error } = await supabase
-      .from('journal')
-      .insert({ user_id: session.user.id, content: text.trim() })
-      .select('id, content, created_at')
-      .single();
-    setSaving(false);
-    if (error) return alert(error.message);
-    setText('');
-    setEntries((prev) => [data as Entry, ...prev]);
-  };
-
-  const reflect = async (entry: Entry) => {
-    if (!session) return;
-    setThinking((t) => ({ ...t, [entry.id]: true }));
+  const onReflect = async (entry: Entry) => {
     try {
-      const res = await fetch('/api/reflect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: entry.content }),
+      setBusyId(entry.id);
+
+      // 1) Ask the AI for a reflection
+      const aiText = await reflect(entry.content);
+
+      // 2) Save to Supabase `replies`
+      // columns expected: id (uuid), user_id (uuid), entry_id (uuid), content (text), created_at (timestamp)
+      const { error } = await supabase.from('replies').insert({
+        user_id: userId,
+        entry_id: entry.id,
+        content: aiText,
       });
-      const { text, error } = await res.json();
-      if (error) throw new Error(error);
+      if (error) throw error;
 
-      // Save reflection to Supabase
-      const { data, error: insertErr } = await supabase
-        .from('replies')
-        .insert({
-          user_id: session.user.id,
-          entry_id: entry.id,
-          text,
-        })
-        .select('id, entry_id, text, created_at')
-        .single();
-
-      if (insertErr) throw insertErr;
-
-      setRepliesByEntry((prev) => {
-        const list = prev[entry.id] ? [...prev[entry.id]] : [];
-        list.push(data as Reply);
-        return { ...prev, [entry.id]: list };
-      });
-    } catch (e: any) {
-      alert(e.message || 'Could not generate reflection');
+      // 3) Refresh the page/data (so the reply appears under the entry)
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      alert('AI reflection failed. Check console.');
     } finally {
-      setThinking((t) => ({ ...t, [entry.id]: false }));
+      setBusyId(null);
     }
   };
 
-  if (!session) {
-    return (
-      <div style={{ textAlign: 'center', marginTop: 48 }}>
-        Please log in at <a href="/auth">Auth</a> first.
-      </div>
-    );
-  }
-
   return (
-    <div style={{ maxWidth: 720, margin: '48px auto', padding: '0 16px' }}>
-      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 16 }}>
-        Your Journal
-      </h1>
-
-      <div style={{ display: 'grid', gap: 8, marginBottom: 24 }}>
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Two or three honest sentences…"
-          style={{ width: '100%', height: 120, padding: 12, borderRadius: 10, border: '1px solid #ddd' }}
-        />
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={save} disabled={saving || !text.trim()} style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid #222' }}>
-            {saving ? 'Saving…' : 'Save entry'}
+    <div className="mx-auto max-w-2xl p-6 space-y-6">
+      {entries.map((e) => (
+        <div key={e.id} className="rounded-lg border p-4 space-y-3">
+          <div className="whitespace-pre-wrap">{e.content}</div>
+          <button
+            onClick={() => onReflect(e)}
+            disabled={busyId === e.id}
+            className="rounded bg-black text-white px-3 py-1 disabled:opacity-50"
+          >
+            {busyId === e.id ? 'Reflecting…' : 'Reflect (AI)'}
           </button>
-          <a href="/auth" style={{ marginLeft: 'auto' }}>{session.user.email}</a>
-        </div>
-      </div>
 
-      {loading ? (
-        <p>Loading…</p>
-      ) : entries.length === 0 ? (
-        <p>No entries yet.</p>
-      ) : (
-        <ul style={{ display: 'grid', gap: 12, listStyle: 'none', padding: 0 }}>
-          {entries.map((e) => (
-            <li key={e.id} style={{ border: '1px solid #eee', borderRadius: 12, padding: 12 }}>
-              <div style={{ fontSize: 12, color: '#666', marginBottom: 6 }}>
-                {new Date(e.created_at).toLocaleString()}
-              </div>
-              <div style={{ whiteSpace: 'pre-wrap', marginBottom: 10 }}>{e.content}</div>
-              <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
-                <button
-                  onClick={() => reflect(e)}
-                  disabled={!!thinking[e.id]}
-                  style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid #444' }}
-                >
-                  {thinking[e.id] ? 'Thinking…' : 'Reflect (AI)'}
-                </button>
-              </div>
-              {(repliesByEntry[e.id] ?? []).map((r) => (
-                <div key={r.id} style={{ background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 10, marginTop: 6 }}>
-                  <div style={{ fontSize: 12, color: '#777', marginBottom: 4 }}>
-                    AI • {new Date(r.created_at).toLocaleString()}
-                  </div>
-                  <div style={{ whiteSpace: 'pre-wrap' }}>{r.text}</div>
-                </div>
-              ))}
-            </li>
-          ))}
-        </ul>
-      )}
+          {/* Replies list (optional display if you already render them elsewhere) */}
+          {/* Example: if you pass replies in props, render them here */}
+          {/* <div className="mt-3 border-t pt-3 text-sm text-neutral-700">
+             {repliesByEntry[e.id]?.map(r => (
+               <p key={r.id} className="mb-2">{r.content}</p>
+             ))}
+           </div> */}
+        </div>
+      ))}
     </div>
   );
 }
