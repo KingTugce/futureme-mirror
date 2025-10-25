@@ -12,19 +12,26 @@ export default function NewEntry() {
     supabase.auth.getSession().then(({ data }) => setSession(data.session))
   }, [])
 
-  const save = async () => {
-    if (!session) return alert('Please log in first at /auth-test')
-    if (!text.trim()) return alert('Write something first.')
-    setSaving(true)
-    const { error } = await supabase.from('entries').insert({
-      user_id: session.user.id,
-      content_text: text.trim()
-    })
-    setSaving(false)
-    if (error) return alert(error.message)
-    window.location.href = '/journal'
-  }
+const save = async () => {
+  if (!session) return alert('Please log in first at /auth-test');
+  if (!text.trim()) return alert('Write something first.');
+  setSaving(true);
 
+  const { error } = await supabase
+    .from('journal')               // <-- use journal (not entries)
+    .insert({
+      user_id: session.user.id,    // <-- required for RLS
+      content: text.trim(),        // <-- column is content (not content_text)
+    });
+
+  setSaving(false);
+  if (error) return alert(error.message);
+
+  // redirect back to the list
+  window.location.href = '/journal';
+  // (or if you’re using the App Router hook:)
+  // router.push('/journal');
+};
   return (
     <div style={{maxWidth:640,margin:'3rem auto',display:'grid',gap:12}}>
       <h1 style={{fontWeight:700, fontSize:22}}>New Entry</h1>
