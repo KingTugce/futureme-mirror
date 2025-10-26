@@ -30,7 +30,7 @@ const save = async () => {
   // redirect back to the list
   window.location.href = '/journal';
   // (or if you’re using the App Router hook:)
-  // router.push('/journal');
+  // router.push('/journal') ;
 };
   return (
     <div style={{maxWidth:640,margin:'3rem auto',display:'grid',gap:12}}>
