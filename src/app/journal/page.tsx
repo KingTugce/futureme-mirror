@@ -107,10 +107,11 @@ export default function JournalPage() {
       const aiText = json.text ?? '';
 
       // 3) persist reply
-      await supabase.from('replies').insert({
-        entry_id: inserted.id,
-        reply_text: aiText,
-      });
+    await supabase.from('replies').insert({
+    entry_id: inserted.id,
+    content: aiText, // matches your table column
+});
+
 
       // 4) refresh local view
       await loadRecent();
