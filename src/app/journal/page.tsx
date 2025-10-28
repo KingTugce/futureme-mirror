@@ -63,7 +63,7 @@ export default function JournalPage() {
 
   useEffect(() => {
     loadRecent();
-  }, []); // initial fetch
+  }, []); //initial fetch
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
