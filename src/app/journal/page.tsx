@@ -2,11 +2,11 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { createClient } from '@/lib/supabase'; // your existing helper
+import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
 type Reply = {
-  reply_text: string | null;
+  content: string | null;
   created_at: string;
 };
 
@@ -26,7 +26,7 @@ export default function JournalPage() {
   const [text, setText] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  // redirect hint when logged out (keeps it simple—your RLS still protects)
+  // If logged out, bounce to /auth-test (RLS still protects the tables)
   useEffect(() => {
     let active = true;
     (async () => {
@@ -43,8 +43,13 @@ export default function JournalPage() {
     const { data, error } = await supabase
       .from('journal')
       .select(`
-        id, content, created_at,
-        replies:replies ( reply_text, created_at )
+        id,
+        content,
+        created_at,
+        replies:replies (
+          content,
+          created_at
+        )
       `)
       .order('created_at', { ascending: false })
       .limit(10);
@@ -67,10 +72,20 @@ export default function JournalPage() {
     setLoading(true);
     setError(null);
 
+    // current user id (needed because your RLS checks user_id)
+    const { data: userData, error: userErr } = await supabase.auth.getUser();
+    if (userErr || !userData?.user) {
+      setLoading(false);
+      setError('Please log in first.');
+      router.replace('/auth-test');
+      return;
+    }
+    const userId = userData.user.id;
+
     // 1) save entry
     const { data: inserted, error: insertErr } = await supabase
       .from('journal')
-      .insert({ content: text })
+      .insert({ user_id: userId, content: text })
       .select('id, created_at, content')
       .single();
 
@@ -80,7 +95,7 @@ export default function JournalPage() {
       return;
     }
 
-    // optimistic UI: show the entry immediately
+    // optimistic UI
     const optimistic: Entry = {
       id: inserted.id,
       content: inserted.content,
@@ -106,12 +121,12 @@ export default function JournalPage() {
       const json = (await res.json()) as { text?: string };
       const aiText = json.text ?? '';
 
-      // 3) persist reply
-    await supabase.from('replies').insert({
-    entry_id: inserted.id,
-    content: aiText, // matches your table column
-});
-
+      // 3) persist reply (replies.content)
+      await supabase.from('replies').insert({
+        entry_id: inserted.id,
+        user_id: userId,       // if your replies table has user_id & same RLS
+        content: aiText,
+      });
 
       // 4) refresh local view
       await loadRecent();
@@ -191,7 +206,7 @@ export default function JournalPage() {
                       <div className="mb-1 text-[10px] uppercase tracking-wide text-sky-300/70">
                         Reflection
                       </div>
-                      <p className="whitespace-pre-wrap">{r.reply_text}</p>
+                      <p className="whitespace-pre-wrap">{r.content}</p>
                     </div>
                   ))}
                 </div>
