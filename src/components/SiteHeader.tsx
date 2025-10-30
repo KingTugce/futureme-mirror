@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
+import QuickNoteTrigger from './QuickNoteTrigger';
 
 export default function SiteHeader() {
   const supabase = createClient();
@@ -41,6 +42,7 @@ export default function SiteHeader() {
 
           {email ? (
             <>
+              <QuickNoteTrigger />
               <span className="hidden sm:inline text-xs text-neutral-500">{email}</span>
               <button
                 onClick={logout}
