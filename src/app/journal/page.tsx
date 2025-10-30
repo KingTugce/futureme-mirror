@@ -4,6 +4,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import { v4 as uuidv4 } from 'uuid';
+
 
 type Reply = {
   content: string | null;
@@ -83,11 +85,14 @@ export default function JournalPage() {
     const userId = userData.user.id;
 
     // 1) save entry
-    const { data: inserted, error: insertErr } = await supabase
-      .from('journal')
-      .insert({ user_id: userId, content: text })
-      .select('id, created_at, content')
-      .single();
+const newThread = uuidv4();
+
+const { data: inserted, error: insertErr } = await supabase
+  .from('journal')
+  .insert({ user_id: userId, content: text, thread_id: newThread })
+  .select('id, created_at, content, thread_id')
+  .single();
+
 
     if (insertErr || !inserted) {
       setLoading(false);
