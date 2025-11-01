@@ -1,15 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --ring: 56, 189, 248; /* sky-400 */
-}
-
-* {
-  outline-color: rgb(var(--ring));
-}
-        
+  
 :root{
   --brand:#0ea5e9;        /* sky-500 */
   --brand-ink:#0b0d10;
@@ -44,3 +36,12 @@
   border-radius: 16px;
   box-shadow: 0 8px 30px rgba(17,24,39,0.06);
 }
+
+:root {
+  --ring: 56, 189, 248; /* sky-400 */
+}
+
+* {
+  outline-color: rgb(var(--ring));
+}
+      
