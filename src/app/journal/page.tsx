@@ -143,14 +143,14 @@ const { data: inserted, error: insertErr } = await supabase
   }
 
 return (
-  <main className="min-h-screen bg-gradient-to-b from-white to-slate-50 text-neutral-900">
+  <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc,#eef2ff)] dark:bg-[linear-gradient(135deg,#0b0e11,#111827)] text-neutral-900 dark:text-neutral-100">
     <div className="mx-auto max-w-3xl px-4 py-10">
       <header className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Journal</h1>
         <button
           type="button"
           onClick={loadRecent}
-          className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-sm text-neutral-700 shadow-sm hover:bg-neutral-50"
+          className="rounded-lg border border-neutral-200 dark:border-white/10 bg-white/80 dark:bg-white/5 px-3 py-1.5 text-sm text-neutral-700 dark:text-neutral-200 shadow-sm hover:bg-white/90 dark:hover:bg-white/10 backdrop-blur"
         >
           Refresh
         </button>
@@ -159,32 +159,30 @@ return (
       {/* Composer */}
       <form
         onSubmit={handleSubmit}
-        className="rounded-2xl border border-neutral-200 bg-white/90 p-5 shadow-sm backdrop-blur"
+        className="rounded-2xl border border-neutral-200 dark:border-white/10 bg-white/75 dark:bg-white/5 p-5 shadow-sm backdrop-blur"
       >
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="How did today actually feel?"
           rows={5}
-          className="w-full resize-y rounded-xl border border-neutral-300 bg-white px-4 py-3 text-neutral-900 placeholder:text-neutral-400 outline-none focus:ring-4 focus:ring-sky-400/25"
+          className="w-full resize-y rounded-xl border border-neutral-300 dark:border-white/15 bg-white/90 dark:bg-white/5 px-4 py-3 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 outline-none focus:ring-4 focus:ring-sky-400/25"
         />
         <div className="mt-3 flex items-center justify-between">
           {error ? (
-            <p className="text-sm text-rose-600">{error}</p>
+            <p className="text-sm text-rose-600 dark:text-rose-400">{error}</p>
           ) : (
-            <p className="text-sm text-neutral-500">
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">
               Tip: be specific—your AI reflection improves with detail.
             </p>
           )}
-          <div className="flex gap-2">
-            <button
-              type="submit"
-              disabled={loading || !text.trim()}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-br from-sky-500 to-violet-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {loading ? 'Reflecting…' : 'Save & Reflect'}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={loading || !text.trim()}
+            className="inline-flex items-center gap-2 rounded-xl bg-[linear-gradient(135deg,#3b82f6,#8b5cf6)] px-4 py-2 text-sm font-medium text-white shadow-sm transition disabled:cursor-not-allowed disabled:opacity-60 hover:opacity-95"
+          >
+            {loading ? 'Reflecting…' : 'Save & Reflect'}
+          </button>
         </div>
       </form>
 
@@ -193,24 +191,72 @@ return (
         {entries.map((entry) => (
           <article
             key={entry.id}
-            className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+            className="group rounded-2xl border border-neutral-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-5 shadow-sm backdrop-blur transition-shadow hover:shadow-md"
           >
-            <div className="text-xs text-neutral-500">
-              {new Date(entry.created_at).toLocaleString()}
-            </div>
-            <p className="mt-2 whitespace-pre-wrap text-neutral-900">
-              {entry.content}
-            </p>
+            <div className="flex items-start justify-between gap-3">
+              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                {new Date(entry.created_at).toLocaleString()}
+              </div>
 
-            {/* Replies */}
+              {/* action bar (shows on hover) */}
+              <div className="invisible flex items-center gap-2 group-hover:visible">
+                {editingId === entry.id ? (
+                  <>
+                    <button
+                      onClick={() => saveEdit(entry.id)}
+                      className="rounded-md bg-black px-2.5 py-1 text-xs font-medium text-white hover:bg-black/90"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={cancelEdit}
+                      className="rounded-md border border-neutral-200 dark:border-white/15 bg-white/80 dark:bg-white/5 px-2.5 py-1 text-xs text-neutral-700 dark:text-neutral-200 hover:bg-white/90 dark:hover:bg-white/10"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => startEdit(entry)}
+                      className="rounded-md border border-neutral-200 dark:border-white/15 bg-white/80 dark:bg-white/5 px-2.5 py-1 text-xs text-neutral-700 dark:text-neutral-200 hover:bg-white/90 dark:hover:bg-white/10"
+                      title="Edit"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(entry.id)}
+                      className="rounded-md border border-rose-200 bg-rose-50 px-2.5 py-1 text-xs text-rose-700 hover:bg-rose-100 dark:border-rose-400/30 dark:bg-rose-500/10 dark:text-rose-200"
+                      title="Delete"
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* content / editor */}
+            {editingId === entry.id ? (
+              <textarea
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                rows={4}
+                className="mt-3 w-full resize-y rounded-xl border border-neutral-300 dark:border-white/15 bg-white/90 dark:bg-white/5 px-3 py-2 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 outline-none focus:ring-4 focus:ring-sky-400/25"
+              />
+            ) : (
+              <p className="mt-2 whitespace-pre-wrap text-neutral-900 dark:text-neutral-100">{entry.content}</p>
+            )}
+
+            {/* replies */}
             {entry.replies && entry.replies.length > 0 && (
               <ul className="mt-4 space-y-3">
                 {entry.replies.map((r, i) => (
                   <li
                     key={i}
-                    className="rounded-xl border border-sky-200 bg-sky-50 p-3 text-sky-900"
+                    className="rounded-xl border border-sky-200 dark:border-sky-400/25 bg-sky-50/80 dark:bg-sky-500/10 p-3 text-sky-900 dark:text-sky-100"
                   >
-                    <div className="mb-1 text-[10px] uppercase tracking-wide text-sky-600">
+                    <div className="mb-1 text-[10px] uppercase tracking-wide text-sky-600 dark:text-sky-300/80">
                       Reflection
                     </div>
                     <p className="whitespace-pre-wrap">{r.content}</p>
@@ -222,7 +268,7 @@ return (
         ))}
 
         {entries.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-neutral-300 bg-white p-8 text-center text-neutral-500">
+          <div className="rounded-2xl border border-dashed border-neutral-300 dark:border-white/15 bg-white/70 dark:bg-white/5 p-8 text-center text-neutral-500 dark:text-neutral-400 backdrop-blur">
             No entries yet. Write your first note above.
           </div>
         )}
