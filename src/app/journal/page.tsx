@@ -6,7 +6,6 @@ import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 
-
 type Reply = {
   content: string | null;
   created_at: string;
@@ -27,6 +26,10 @@ export default function JournalPage() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [text, setText] = useState('');
   const [error, setError] = useState<string | null>(null);
+  
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draft, setDraft] = useState('');
+
 
   // If logged out, bounce to /auth-test (RLS still protects the tables)
   useEffect(() => {
@@ -66,6 +69,34 @@ export default function JournalPage() {
   useEffect(() => {
     loadRecent();
   }, []); //initial fetch
+
+  // ------------------------adding new functions----------------
+
+  function startEdit(entry: any) {
+  setEditingId(entry.id);
+  setDraft(entry.content);
+}
+
+function cancelEdit() {
+  setEditingId(null);
+  setDraft('');
+}
+
+async function saveEdit(id: string) {
+  const { error } = await supabase
+    .from('journal')
+    .update({ content: draft })
+    .eq('id', id);
+
+  if (!error) {
+    setEntries(entries.map((e) => (e.id === id ? { ...e, content: draft } : e)));
+    setEditingId(null);
+    setDraft('');
+  } else {
+    console.error(error);
+  }
+}
+// ------------
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
