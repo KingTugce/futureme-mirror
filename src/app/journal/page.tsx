@@ -96,7 +96,7 @@ async function saveEdit(id: string) {
     console.error(error);
   }
 }
-// ------------
+// ----------
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
