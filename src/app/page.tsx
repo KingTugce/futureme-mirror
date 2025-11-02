@@ -29,7 +29,7 @@ export default function Home() {
               Open Journal
             </Link>
             <Link
-              href="/auth-test"
+              href="/auth"
               className="rounded-lg border border-neutral-300 bg-white px-4 py-2.5 text-sm text-neutral-800 hover:bg-neutral-50"
             >
               Log in
