@@ -172,6 +172,27 @@ const { data: inserted, error: insertErr } = await supabase
       setLoading(false);
     }
   }
+  async function handleDelete(entryId: string) {
+  try {
+    setLoading(true);
+    const { error } = await supabase
+      .from('journal')
+      .delete()
+      .eq('id', entryId);
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    // Update UI immediately after deletion
+    setEntries((prev) => prev.filter((entry) => entry.id !== entryId));
+  } catch (err: any) {
+    setError(err?.message ?? 'Failed to delete entry.');
+  } finally {
+    setLoading(false);
+  }
+}
 
 return (
   <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc,#eef2ff)] dark:bg-[linear-gradient(135deg,#0b0e11,#111827)] text-neutral-900 dark:text-neutral-100">
