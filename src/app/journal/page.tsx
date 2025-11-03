@@ -31,13 +31,13 @@ export default function JournalPage() {
   const [draft, setDraft] = useState('');
 
 
-  // If logged out, bounce to /auth-test (RLS still protects the tables)
+  // If logged out, bounce to /auth (RLS still protects the tables)
   useEffect(() => {
     let active = true;
     (async () => {
       const { data } = await supabase.auth.getUser();
       if (!active) return;
-      if (!data.user) router.replace('/auth-test');
+      if (!data.user) router.replace('/auth');
     })();
     return () => {
       active = false;
@@ -110,7 +110,7 @@ async function saveEdit(id: string) {
     if (userErr || !userData?.user) {
       setLoading(false);
       setError('Please log in first.');
-      router.replace('/auth-test');
+      router.replace('/auth');
       return;
     }
     const userId = userData.user.id;

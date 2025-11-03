@@ -52,12 +52,10 @@ export default function SiteHeader() {
               </button>
             </>
           ) : (
-            <Link
-              href="/auth"
-              className="rounded-lg bg-black px-3 py-1.5 text-sm font-medium text-white hover:bg-black/90"
-            >
-              Login
+            <Link href="/auth" className="rounded-lg bg-black px-3 py-1.5 text-sm font-medium text-white hover:bg-black/80">
+            Login
             </Link>
+
           )}
         </nav>
       </div>
