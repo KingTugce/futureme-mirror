@@ -20,7 +20,14 @@ export default function AuthPage() {
     setLoading(true);
     const { error } = await supabase.auth.signInWithOtp({
       email: clean,
-      options: { emailRedirectTo: `${window.location.origin}/journal` },
+      options: {
+        emailRedirectTo: `${
+          typeof window !== "undefined"
+            ? window.location.origin
+            : process.env.NEXT_PUBLIC_SITE_URL
+  }/journal`,
+},
+
     });
     setLoading(false);
     setMsg(error ? error.message : '✨ Magic link sent. Check your inbox.');
