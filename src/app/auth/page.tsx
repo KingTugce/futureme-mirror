@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-old';
 
 export default function AuthPage() {
   const supabase = createClient();
@@ -24,7 +24,7 @@ export default function AuthPage() {
         emailRedirectTo: `${
           typeof window !== "undefined"
             ? window.location.origin
-            : process.env.NEXT_PUBLIC_SITE_URL
+          : process.env.NEXT_PUBLIC_SITE_URL
   }/journal`,
 },
 

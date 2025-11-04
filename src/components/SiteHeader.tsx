@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-old';
 import { useEffect, useState } from 'react';
 import QuickNoteTrigger from './QuickNoteTrigger';
 

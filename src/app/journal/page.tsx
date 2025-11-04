@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { createClient } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-old';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -195,8 +195,9 @@ const { data: inserted, error: insertErr } = await supabase
 }
 
 return (
-  <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc,#eef2ff)] dark:bg-[linear-gradient(135deg,#0b0e11,#111827)] text-neutral-900 dark:text-neutral-100">
-    <div className="mx-auto max-w-3xl px-4 py-10">
+  <main className="min-h-[100dvh] text-zinc-200
+    bg-[radial-gradient(1200px_600px_at_50%_-100px,rgba(96,165,250,.25),transparent_60%),radial-gradient(1000px_500px_at_100%_0,rgba(167,139,250,.18),transparent_60%)]">
+    <div className="mx-auto max-w-4xl px-6 pb-24 pt-16">
       <header className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Journal</h1>
         <button
