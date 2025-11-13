@@ -52,6 +52,7 @@ export default function Home() {
           </div>
           <div className="card p-4">
             <div className="text-sm font-medium text-neutral-900">Momentum you can feel</div>
+            
             <div className="mt-1 text-sm text-neutral-600">
               Tiny wins daily: write → reflect → adjust.
             </div>
