@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 export default function Home() {
+  
   return (
     <div className="bg-soft-grid relative">
       <section className="mx-auto max-w-6xl px-6 pt-20 pb-24 md:pt-28 md:pb-28">
@@ -28,6 +29,7 @@ export default function Home() {
             >
               Open Journal
             </Link>
+            
             <Link
               href="/auth"
               className="rounded-lg border border-neutral-300 bg-white px-4 py-2.5 text-sm text-neutral-800 hover:bg-neutral-50"
@@ -56,6 +58,7 @@ export default function Home() {
             <div className="mt-1 text-sm text-neutral-600">
               Tiny wins daily: write → reflect → adjust.
             </div>
+          
           </div>
         </div>
       </section>
