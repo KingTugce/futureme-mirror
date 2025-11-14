@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: 'Write honestly. Get a thoughtful reflection.',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children } : { children: React.ReactNode }) {
   return (
     
     <html lang="en" className="bg-neutral-50 text-neutral-900">
