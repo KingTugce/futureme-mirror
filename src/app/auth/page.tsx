@@ -48,7 +48,7 @@ export default function AuthPage() {
           </p>
         </div>
 
-        <form onSubmit={handleLogin} className="px-8 pb-8 space-y-3">
+        <form onSubmit= {handleLogin} className= "px-8 pb-8 space-y-3">
           <input
             type="email"
             autoComplete="email"
@@ -73,8 +73,9 @@ export default function AuthPage() {
           )}
 
           <p className="pt-2 text-[11px] text-neutral-500 dark:text-neutral-400 text-center">
-            By continuing you agree to our respectful use of email. We’ll never spam.
+                By continuing you agree to our respectful use of email. We’ll never spam.
           </p>
+        
         </form>
       </div>
     </main>
