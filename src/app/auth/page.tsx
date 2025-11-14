@@ -30,7 +30,7 @@ export default function AuthPage() {
 
     });
     setLoading(false);
-    setMsg(error ? error.message : '✨ Magic link sent. Check your inbox.');
+    setMsg(error ? error.message : '✨ Magic link sent. Check your inbox. ');
   }
 
   return (
