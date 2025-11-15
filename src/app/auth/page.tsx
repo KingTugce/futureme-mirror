@@ -41,7 +41,7 @@ export default function AuthPage() {
             Private & secure · Magic link
           </div>
           <h1 className="mt-3 text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
-            FutureMe Mirror
+            FutureMe
           </h1>
           <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-300">
             Reflect with clarity. Log in via email.
@@ -73,7 +73,7 @@ export default function AuthPage() {
           )}
 
           <p className="pt-2 text-[11px] text-neutral-500 dark:text-neutral-400 text-center">
-                By continuing you agree to our respectful use of email. We’ll never spam.
+                By continuing you agree to our respectful use of email.
           </p>
         
         </form>
