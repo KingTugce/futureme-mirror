@@ -29,7 +29,7 @@ export default function SiteHeader() {
     <header className="sticky top-0 z-20 border-b border-neutral-200/70 bg-white/85 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
         <Link href="/" className="text-[15px] font-semibold tracking-tight text-neutral-900">
-          FutureMe Mirror
+          FutureMe
         </Link>
 
         <nav className="flex items-center gap-2">

@@ -6,7 +6,7 @@ import SiteHeader from '@/components/SiteHeader';
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
 export const metadata: Metadata = {
-  title: 'FutureMe Mirror',
+  title: 'FutureMe',
   description: 'Write honestly. Get a thoughtful reflection.',
 };
 
@@ -21,7 +21,7 @@ export default function RootLayout({ children } : { children: React.ReactNode })
         
         <footer className="mt-16 border-t border-neutral-200 py-8 text-xs text-neutral-500">
           <div className="mx-auto max-w-6xl px-5">
-            © {new Date().getFullYear()} FutureMe Mirror · Privacy-first journaling
+            © {new Date().getFullYear()} FutureMe · Privacy-first journaling
           </div>
         </footer>
       

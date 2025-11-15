@@ -13,7 +13,7 @@ export default function Home() {
 
           <h1 className="text-4xl font-semibold leading-tight tracking-tight text-neutral-900 md:text-6xl">
             Future<span className="bg-gradient-to-r from-sky-500 to-violet-500 bg-clip-text text-transparent">
-              Me Mirror
+              Me
             </span>
           </h1>
 
