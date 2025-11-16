@@ -14,14 +14,30 @@ type Entry = {
 };
 
 export default function JournalPage() {
-  const { data: prompt } = useSWR('/api/prompt/today', fetcher);
-  const { data: stats, mutate: mutateStats } = useSWR('/api/stats', fetcher);
+  const {
+    data: prompt,
+    error: promptError,
+    isLoading: promptLoading,
+  } = useSWR('/api/prompts/today', fetcher);
+
+  const {
+    data: stats,
+    error: statsError,
+    isLoading: statsLoading,
+    mutate: mutateStats,
+  } = useSWR('/api/prompts/today/stats', fetcher);
+
   const {
     data: trend,
+    error: trendError,
+    isLoading: trendLoading,
     mutate: mutateTrend,
   } = useSWR('/api/sentiment/trend?days=30', fetcher);
+
   const {
     data: entries,
+    error: entriesError,
+    isLoading: entriesLoading,
     mutate: mutateEntries,
   } = useSWR<Entry[]>('/api/entries?limit=30', fetcher);
 
@@ -29,6 +45,9 @@ export default function JournalPage() {
   const [saving, setSaving] = useState(false);
 
   const today = new Date().toLocaleDateString();
+
+  // 👉 keep the rest of your component body here (saveEntry, return JSX, Sparkline, etc.)
+
 
   async function saveEntry() {
     if (!content.trim()) return;
