@@ -4,7 +4,34 @@
 import useSWR from 'swr';
 import { useState } from 'react';
 
-const fetcher = (url: string) => fetch(url).then((r) => r.json());
+// const fetcher = (url: string) => fetch(url).then((r) => r.json());
+const {
+  data: prompt,
+  error: promptError,
+  isLoading: promptLoading,
+} = useSWR('/api/prompts/today', fetcher);
+
+const {
+  data: stats,
+  error: statsError,
+  isLoading: statsLoading,
+  mutate: mutateStats,
+} = useSWR('/api/prompts/today/stats', fetcher);
+
+const {
+  data: trend,
+  error: trendError,
+  isLoading: trendLoading,
+  mutate: mutateTrend,
+} = useSWR('/api/sentiment/trend?days=30', fetcher);
+
+const {
+  data: entries,
+  error: entriesError,
+  isLoading: entriesLoading,
+  mutate: mutateEntries,
+} = useSWR<Entry[]>('/api/entries?limit=30', fetcher);
+
 
 type Entry = {
   id: string;
@@ -117,9 +144,12 @@ export default function JournalPage() {
             <p className="text-xs uppercase tracking-wide text-slate-500">
               Daily prompt
             </p>
-            <p className="mt-1 text-sm text-slate-900 dark:text-slate-100">
-              {prompt?.text ?? '—'}
-            </p>
+<p className="mt-1 text-sm text-slate-900 dark:text-slate-100">
+  {promptLoading && 'Loading prompt…'}
+  {promptError && !promptLoading && 'Couldn’t load today’s prompt.'}
+  {!promptLoading && !promptError && (prompt?.text ?? 'No prompt for today.')}
+</p>
+
           </div>
 
           <div>
