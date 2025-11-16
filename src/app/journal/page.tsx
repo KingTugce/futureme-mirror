@@ -4,7 +4,7 @@
 import useSWR from 'swr';
 import { useState } from 'react';
 
-// const fetcher = (url: string) => fetch(url).then((r) => r.json());
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
 const {
   data: prompt,
   error: promptError,
