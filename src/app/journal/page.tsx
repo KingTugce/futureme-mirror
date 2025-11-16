@@ -75,15 +75,36 @@ export default function JournalPage() {
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">
       {/* Header */}
-      <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Journal</h1>
-          <p className="text-sm text-slate-500">
-            {today} · Streak: {stats?.current_streak ?? 0} days
-          </p>
-        </div>
-        <Sparkline data={trend?.points ?? []} />
-      </header>
+          <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight">Journal</h1>
+
+              <p className="text-sm text-slate-500">
+                {today} ·{' '}
+                {statsLoading && 'Loading streak…'}
+                {statsError && !statsLoading && 'Streak unavailable'}
+                {!statsLoading && !statsError && (
+                  <>Streak: {stats?.current_streak ?? 0} days</>
+                )}
+              </p>
+            </div>
+
+                {/* Sparkline state handling */}
+                {trendLoading && (
+                  <div className="w-[180px] h-[40px] rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+                )}
+
+                {trendError && !trendLoading && (
+                  <div className="w-[180px] h-[40px] flex items-center justify-end text-[10px] text-slate-400">
+                    trend unavailable
+                  </div>
+                )}
+
+                {!trendLoading && !trendError && (
+                  <Sparkline data={trend?.points ?? []} />
+                )}
+            </header>
+
 
       {/* Main layout: left = days, right = today + prompt */}
       <div className="grid gap-6 lg:grid-cols-[minmax(0,220px)_minmax(0,1fr)]">
@@ -92,42 +113,59 @@ export default function JournalPage() {
           <h2 className="text-xs font-medium uppercase tracking-wide text-slate-500 mb-3">
             Recent days
           </h2>
-          <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
-            {entries && entries.length > 0 ? (
-              entries.map((entry) => {
-                const d = new Date(entry.created_at);
-                const label = d.toLocaleDateString();
-                const snippet =
-                  (entry.content || '').trim().slice(0, 80) ||
-                  'No text for this day.';
+                      <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
+                {entriesLoading && (
+                  <>
+                    <div className="h-10 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+                    <div className="h-10 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+                    <div className="h-10 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+                  </>
+                )}
 
-                return (
-                  <div
-                    key={entry.id}
-                    className="rounded-xl border border-slate-200/70 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/80 px-3 py-2"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-medium text-slate-700 dark:text-slate-200">
-                        {label}
-                      </span>
-                      {typeof entry.sentiment_score === 'number' && (
-                        <span className="text-[10px] text-slate-400">
-                          mood {entry.sentiment_score.toFixed(2)}
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-1 text-xs text-slate-500 line-clamp-2">
-                      {snippet}
-                    </p>
-                  </div>
-                );
-              })
-            ) : (
-              <p className="text-xs text-slate-400">
-                Your recent days will appear here after you save entries.
-              </p>
-            )}
-          </div>
+                {entriesError && !entriesLoading && (
+                  <p className="text-xs text-slate-400">
+                    Couldn’t load recent entries.
+                  </p>
+                )}
+
+                {!entriesLoading && !entriesError && entries && entries.length > 0 && (
+                  entries.map((entry) => {
+                    const d = new Date(entry.created_at);
+                    const label = d.toLocaleDateString();
+                    const snippet =
+                      (entry.content || '').trim().slice(0, 80) ||
+                      'No text for this day.';
+
+                    return (
+                      <div
+                        key={entry.id}
+                        className="rounded-xl border border-slate-200/70 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/80 px-3 py-2"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-xs font-medium text-slate-700 dark:text-slate-200">
+                            {label}
+                          </span>
+                          {typeof entry.sentiment_score === 'number' && (
+                            <span className="text-[10px] text-slate-400">
+                              mood {entry.sentiment_score.toFixed(2)}
+                            </span>
+                          )}
+                        </div>
+                        <p className="mt-1 text-xs text-slate-500 line-clamp-2">
+                          {snippet}
+                        </p>
+                      </div>
+                    );
+                  })
+                )}
+
+                {!entriesLoading && !entriesError && (!entries || entries.length === 0) && (
+                  <p className="text-xs text-slate-400">
+                    Your recent days will appear here after you save entries.
+                  </p>
+                )}
+              </div>
+
         </aside>
 
         {/* Right column — prompt + today’s entry */}
