@@ -13,34 +13,6 @@ type Entry = {
   sentiment_score?: number | null;
 };
 
-const {
-  data: prompt,
-  error: promptError,
-  isLoading: promptLoading,
-} = useSWR('/api/prompts/today', fetcher);
-
-const {
-  data: stats,
-  error: statsError,
-  isLoading: statsLoading,
-  mutate: mutateStats,
-} = useSWR('/api/prompts/today/stats', fetcher);
-
-const {
-  data: trend,
-  error: trendError,
-  isLoading: trendLoading,
-  mutate: mutateTrend,
-} = useSWR('/api/sentiment/trend?days=30', fetcher);
-
-const {
-  data: entries,
-  error: entriesError,
-  isLoading: entriesLoading,
-  mutate: mutateEntries,
-} = useSWR<Entry[]>('/api/entries?limit=30', fetcher);
-
-
 export default function JournalPage() {
   const { data: prompt } = useSWR('/api/prompt/today', fetcher);
   const { data: stats, mutate: mutateStats } = useSWR('/api/stats', fetcher);
@@ -145,12 +117,9 @@ export default function JournalPage() {
             <p className="text-xs uppercase tracking-wide text-slate-500">
               Daily prompt
             </p>
-<p className="mt-1 text-sm text-slate-900 dark:text-slate-100">
-  {promptLoading && 'Loading prompt…'}
-  {promptError && !promptLoading && 'Couldn’t load today’s prompt.'}
-  {!promptLoading && !promptError && (prompt?.text ?? 'No prompt for today.')}
-</p>
-
+            <p className="mt-1 text-sm text-slate-900 dark:text-slate-100">
+              {prompt?.text ?? '—'}
+            </p>
           </div>
 
           <div>
