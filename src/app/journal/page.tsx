@@ -5,6 +5,14 @@ import useSWR from 'swr';
 import { useState } from 'react';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
+
+type Entry = {
+  id: string;
+  created_at: string;
+  content?: string | null;
+  sentiment_score?: number | null;
+};
+
 const {
   data: prompt,
   error: promptError,
@@ -32,13 +40,6 @@ const {
   mutate: mutateEntries,
 } = useSWR<Entry[]>('/api/entries?limit=30', fetcher);
 
-
-type Entry = {
-  id: string;
-  created_at: string;
-  content?: string | null;
-  sentiment_score?: number | null;
-};
 
 export default function JournalPage() {
   const { data: prompt } = useSWR('/api/prompt/today', fetcher);
