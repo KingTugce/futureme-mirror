@@ -171,11 +171,14 @@ export default function JournalPage() {
         {/* Right column — prompt + today’s entry */}
         <section className="space-y-4">
           <div className="rounded-2xl border border-slate-200/80 bg-white/80 dark:bg-slate-900/70 dark:border-slate-800/80 p-4">
+            
             <p className="text-xs uppercase tracking-wide text-slate-500">
               Daily prompt
             </p>
-            <p className="mt-1 text-sm text-slate-900 dark:text-slate-100">
+            
+            <p className="mt-1 text-sm text-slate-900 dark:text-slate-100" >
               {prompt?.text ?? '—'}
+
             </p>
           </div>
 
