@@ -159,7 +159,7 @@ export default function JournalPage() {
                   })
                 )}
 
-                {!entriesLoading && !entriesError && (!entries || entries.length === 0) &&  (
+                {!entriesLoading  && !entriesError && (!entries || entries.length === 0) &&  (
                   <p className="text-xs text-slate-400">
                     Your recent days will appear here after you save entries.
                   </p>
