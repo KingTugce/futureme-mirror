@@ -239,6 +239,7 @@ function Sparkline({ data }: { data: { x: string; y: number }[] }) {
       height={h}
       className="opacity-80 text-slate-400 dark:text-slate-300"
     >
+     
       <path d={d} fill="none" stroke="currentColor" strokeWidth={2} />
     </svg>
   );
