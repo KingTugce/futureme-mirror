@@ -77,7 +77,7 @@ return (
 )}
 
 
-{msg && <p className="mt-4 text-sm text-emerald-300">{msg}</p>}
+{msg && <p className=" mt-4 text-sm text-emerald-300">{msg}</p>}
 </div>
 </div>
 );
