@@ -19,8 +19,8 @@ export default function RootLayout({ children } : { children: React.ReactNode })
         <SiteHeader />
         <main className="mx-auto max-w-6xl px-5">{children}</main>
         
-        <footer className="mt-16 border-t border-neutral-200 py-8 text-xs text-neutral-500">
-          <div className="mx-auto max-w-6xl px-5">
+        <footer className="mt-16 border-t  border-neutral-200 py-8 text-xs text-neutral-500">
+          <div className="mx-auto max-w-6xl px-5" >
             © {new Date().getFullYear()} FutureMe · Privacy-first journaling
           </div>
         </footer>
