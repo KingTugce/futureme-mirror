@@ -67,7 +67,7 @@ export default function AuthPage() {
           </button>
 
           {msg && (
-            <div className="rounded-lg border border-sky-200/60 dark:border-sky-400/20 bg-sky-50/80 dark:bg-sky-500/10 px-3 py-2 text-xs text-sky-700 dark:text-sky-200">
+            <div className =" rounded-lg border border-sky-200/60 dark:border-sky-400/20 bg-sky-50/80 dark:bg-sky-500/10 px-3 py-2 text-xs text-sky-700 dark:text-sky-200">
               {msg}
             </div>
           )}
