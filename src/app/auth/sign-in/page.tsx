@@ -72,7 +72,7 @@ return (
 ) : (
 <form className="mt-6 space-y-3" onSubmit={sendMagic}>
 <input className="w-full rounded-xl bg-slate-800/70 px-3 py-2 outline-none" placeholder="you@email.com" value={email} onChange={e=>setEmail(e.target.value)} />
-<button className="px-4 py-2 rounded-xl bg-white/10" type="submit">Send magic link</button>
+<button className="px-4 py-2 rounded-xl  bg-white/10" type="submit">Send magic link</button>
 </form>
 )}
 
