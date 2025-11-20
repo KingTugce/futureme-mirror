@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 
   // ⬇️ If your table is called "entries", change this line to .from('entries')
   const { data, error } = await supabase
-    .from('journal_entries')
+    .from('entries')
     .select('id, created_at, content, sentiment_score')
     .order('created_at', { ascending: false })
     .limit(limit);
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
   // ⬇️ Same table name here – change to 'entries' if needed
   const { data, error } = await supabase
-    .from('journal_entries')
+    .from('entries')
     .insert({ content })
     .select('id, created_at, content, sentiment_score')
     .single();
