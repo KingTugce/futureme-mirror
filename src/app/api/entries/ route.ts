@@ -7,15 +7,14 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// GET /api/entries?limit=30  – for the sidebar list
+// GET /api/entries?limit=30
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const limit = Number(searchParams.get('limit') ?? '30');
 
-  // ⬇️ If your table is called "entries", change this line to .from('entries')
   const { data, error } = await supabase
     .from('entries')
-    .select('id, created_at, content, sentiment_score')
+    .select('id, created_at, content_text, sentiment_score')
     .order('created_at', { ascending: false })
     .limit(limit);
 
@@ -27,7 +26,7 @@ export async function GET(req: Request) {
   return NextResponse.json(data ?? []);
 }
 
-// POST /api/entries  – when you click "Save entry"
+// POST /api/entries
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
   const content = (body?.content ?? '').toString().trim();
@@ -36,11 +35,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Content required.' }, { status: 400 });
   }
 
-  // ⬇️ Same table name here – change to 'entries' if needed
   const { data, error } = await supabase
     .from('entries')
-    .insert({ content })
-    .select('id, created_at, content, sentiment_score')
+    .insert({ content_text: content }) // 👈 use content_text
+    .select('id, created_at, content_text, sentiment_score')
     .single();
 
   if (error) {
