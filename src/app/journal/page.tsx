@@ -1,10 +1,8 @@
 // src/app/journal/page.tsx
 'use client';
 
-import useSWR from 'swr';
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase-old';
-
+import useSWR from 'swr';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -16,13 +14,14 @@ type Entry = {
 };
 
 export default function JournalPage() {
-  const supabase = createClient(); 
+  // daily prompt
   const {
     data: prompt,
     error: promptError,
     isLoading: promptLoading,
   } = useSWR('/api/prompts/today', fetcher);
 
+  // streak stats
   const {
     data: stats,
     error: statsError,
@@ -30,6 +29,7 @@ export default function JournalPage() {
     mutate: mutateStats,
   } = useSWR('/api/prompts/today/stats', fetcher);
 
+  // sentiment trend
   const {
     data: trend,
     error: trendError,
@@ -37,63 +37,54 @@ export default function JournalPage() {
     mutate: mutateTrend,
   } = useSWR('/api/sentiment/trend?days=30', fetcher);
 
+  // entries list
   const {
-    data: entries,
+    data: entriesData,
     error: entriesError,
     isLoading: entriesLoading,
     mutate: mutateEntries,
-  } = useSWR<Entry[]>('/api/entries?limit=30', fetcher);
+  } = useSWR<{ entries: Entry[] }>('/api/entries', fetcher);
 
+  const entries = entriesData?.entries ?? [];
+
+  // editor state
   const [content, setContent] = useState('');
   const [saving, setSaving] = useState(false);
 
   const today = new Date().toLocaleDateString();
 
   async function saveEntry() {
-  const clean = content.trim();
-  if (!clean) {
-    alert('Please write something first.');
-    return;
-  }
-
-  setSaving(true);
-
-  // 1) Get current user (for user_id)
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
+    setSaving(true);
+    const res = await fetch('/api/entries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content }),
+    });
     setSaving(false);
-    alert('Please log in again.');
-    return;
+
+    if (res.ok) {
+      setContent('');
+      mutateStats();
+      mutateTrend();
+      mutateEntries();
+      alert('Saved.');
+    } else {
+      let message = `Error ${res.status}`;
+      try {
+        const data = await res.json();
+        if (data && typeof data.error === 'string') {
+          message = data.error;
+        }
+      } catch {
+        // non-JSON error, keep default message
+      }
+      alert(message);
+    }
   }
-
-  // 2) Insert into entries table
-  const { error: insertError } = await supabase.from('entries').insert({
-    user_id: user.id,
-    content_text: clean,
-  });
-
-  setSaving(false);
-
-  if (insertError) {
-    console.error('insert error', insertError);
-    alert(insertError.message || 'Could not save entry.');
-    return;
-  }
-
-  // 3) Clear editor + refresh stats/trend if you like
-  setContent('');
-  mutateStats();
-  mutateTrend();
-  alert('Saved.');
-}
-
 
   return (
     <main className="mx-auto max-w-6xl px-5 py-6">
+      {/* Header */}
       <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Journal</h1>
