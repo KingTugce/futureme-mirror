@@ -16,6 +16,7 @@ type Entry = {
 };
 
 export default function JournalPage() {
+  const supabase = createClient(); 
   const {
     data: prompt,
     error: promptError,
