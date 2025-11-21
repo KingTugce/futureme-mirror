@@ -3,6 +3,8 @@
 
 import useSWR from 'swr';
 import { useState } from 'react';
+import { createClient } from '@/lib/supabase-old';
+
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
