@@ -50,33 +50,47 @@ export default function JournalPage() {
   const today = new Date().toLocaleDateString();
 
   async function saveEntry() {
-    setSaving(true);
-    const res = await fetch('/api/entries', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content }),
-    });
-    setSaving(false);
-
-    if (res.ok) {
-      setContent('');
-      mutateStats();
-      mutateTrend();
-      mutateEntries();
-      alert('Saved.');
-    } else {
-      let message = `Error ${res.status}`;
-      try {
-        const data = await res.json();
-        if (data && typeof data.error === 'string') {
-          message = data.error;
-        }
-      } catch {
-        // non-JSON error, keep default message
-      }
-      alert(message);
-    }
+  const clean = content.trim();
+  if (!clean) {
+    alert('Please write something first.');
+    return;
   }
+
+  setSaving(true);
+
+  // 1) Get current user (for user_id)
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    setSaving(false);
+    alert('Please log in again.');
+    return;
+  }
+
+  // 2) Insert into entries table
+  const { error: insertError } = await supabase.from('entries').insert({
+    user_id: user.id,
+    content_text: clean,
+  });
+
+  setSaving(false);
+
+  if (insertError) {
+    console.error('insert error', insertError);
+    alert(insertError.message || 'Could not save entry.');
+    return;
+  }
+
+  // 3) Clear editor + refresh stats/trend if you like
+  setContent('');
+  mutateStats();
+  mutateTrend();
+  alert('Saved.');
+}
+
 
   return (
     <main className="mx-auto max-w-6xl px-5 py-6">
