@@ -8,7 +8,7 @@ import { createBrowserClient } from '@/lib/supabase/client';
 export default function ResetPage(){
 const supabase = createBrowserClient();
 const [email, setEmail] = useState('');
-const [msg, setMsg] = useState<string | null>(null);
+const [msg, setMsg] = useState<string | null>(null) ;
 return (
 <div className="min-h-screen  grid place-items-center p-6">
 <form className="w-full max-w-md space-y-3" onSubmit={async (e)=>{e.preventDefault();
