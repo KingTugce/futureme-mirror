@@ -233,7 +233,7 @@ function Sparkline({ data }: { data: { x: string; y: number }[] }) {
   const max = Math.max(...ys);
   const scaleX = (i: number) => p + (i * (w - 2 * p)) / (data.length - 1) ;
   const scaleY = (v: number) =>
-    h - p - ((v - min) * (h - 2 * p)) / ((max - min) || 1);
+    h - p - ((v - min) * (h - 2 * p)) /  ((max - min) || 1);
   const d = data
     .map((pt, i) => `${i === 0 ? 'M' : 'L'} ${scaleX(i)} ${scaleY(pt.y)}`)
     .join(' ');
