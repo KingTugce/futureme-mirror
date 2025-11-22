@@ -239,7 +239,7 @@ function Sparkline({ data }: { data: { x: string; y: number }[] }) {
     .join(' ');
 
   return (
-    <svg width={w} height={h} className="opacity-80">
+    <svg width={w} height={h} className= "opacity-80">
       <path d={d} fill="none" stroke="currentColor" strokeWidth={2} />
     </svg>
   );
