@@ -12,7 +12,7 @@ const [msg, setMsg] = useState<string | null>(null) ;
 return (
 <div className="min-h-screen  grid place-items-center p-6">
 <form className="w-full max-w-md space-y-3" onSubmit={async (e)=>{e.preventDefault();
-const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${location.origin}/auth/update` });
+const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: ` ${location.origin}/auth/update` });
 setMsg(error? error.message : 'Check your inbox to reset.');
 }}>
 <h1 className="text-xl font-semibold ">Reset password</h1>
