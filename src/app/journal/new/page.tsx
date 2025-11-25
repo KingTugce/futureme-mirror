@@ -42,10 +42,10 @@ const save = async () => {
         onChange={e=>setText(e.target.value)}
       />
       <div style={{display:'flex',gap:8}}>
-        <button onClick={save} disabled={saving} style={{padding:'8px 12px',border:'1px solid #222',borderRadius:8}}>
-          {saving ? 'Saving…' : 'Save'}
+        <button onClick={save} disabled={saving} style={{padding:'8px  12px',border: '1px solid #222',borderRadius:8}}>
+          {saving ? 'Saving…'  :  'Save'}
         </button>
-        <a href="/journal" style={{padding:'8px 12px',border:'1px solid #aaa',borderRadius:8}}>Cancel</a>
+        <a href="/journal" style={{padding:'8px 12px',border: '1px solid #aaa' ,borderRadius:8}}>Cancel</a>
       </div>
     </div>
   )
