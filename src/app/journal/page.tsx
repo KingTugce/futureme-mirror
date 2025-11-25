@@ -1,10 +1,10 @@
 // src/app/journal/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState }  from 'react';
 import useSWR from 'swr';
 
-const fetcher = (url: string) => fetch(url).then((r) => r.json());
+const fetcher = (url: string)  => fetch(url).then((r) =>  r.json());
 
 type Entry = {
   id: string;
@@ -14,14 +14,14 @@ type Entry = {
 };
 
 export default function JournalPage() {
-  // daily prompt
+  // daily  prompt
   const {
     data: prompt,
     error: promptError,
     isLoading: promptLoading,
   } = useSWR('/api/prompts/today', fetcher);
 
-  // streak stats
+  // streak  stats
   const {
     data: stats,
     error: statsError,
