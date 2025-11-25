@@ -224,7 +224,7 @@ function Sparkline({ data }: { data: { x: string; y: number }[] }) {
 
   if (!data || data.length === 0) {
     return (
-      <div className=" w-[180px] h-[40px] bg-slate-100 dark:bg-slate-800 rounded-xl" />
+      <div className="  w-[180px] h-[40px] bg-slate-100  dark:bg-slate-800  rounded-xl" />
     );
   }
 
