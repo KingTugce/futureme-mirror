@@ -14,7 +14,7 @@ export default function JournalPage() {
 
   // list of entries
   const { data: entriesData, mutate: mutateEntries } = useSWR(
-    '/api/entries',
+    '/api/journal-entries',
     fetcher,
   );
 
@@ -25,7 +25,7 @@ export default function JournalPage() {
     if (!body) return;
 
     setSaving(true);
-    const res = await fetch('/api/entries', {
+    const res = await fetch('/api/journal-entries', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: body }),
@@ -47,37 +47,37 @@ export default function JournalPage() {
   const today = new Date().toLocaleDateString();
 
   return (
-    <div className= "max-w-3xl mx-auto p-6 space-y-6">
-      <header className= "flex items-end justify-between">
+    <div className="max-w-3xl mx-auto p-6 space-y-6">
+      <header className="flex items-end justify-between">
         <div>
-          <h1 className= "text-2xl font-semibold">Journal</h1>
-          <p className= "text-sm text-slate-500">{today}</p>
+          <h1 className="text-2xl font-semibold">Journal</h1>
+          <p className="text-sm text-slate-500">{today}</p>
         </div>
       </header>
 
       {/* Daily prompt */}
-      <section className= "rounded-2xl border border-slate-200 p-4 bg-white">
-        <p className= "text-xs uppercase tracking-wide text-slate-500">
+      <section className="rounded-2xl border border-slate-200 p-4 bg-white">
+        <p className="text-xs uppercase tracking-wide text-slate-500">
           Daily prompt
         </p>
-        <p className= "mt-1 text-slate-900">
+        <p className="mt-1 text-slate-900">
           {promptData?.text ?? '—'}
         </p>
       </section>
 
       {/* New entry */}
-      <section className= "space-y-2">
+      <section className="space-y-2">
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className= "w-full min-h-[160px] rounded-2xl border border-slate-200 p-4 outline-none text-sm"
-          placeholder= "Write honestly. This is just for you."
+          className="w-full min-h-[160px] rounded-2xl border border-slate-200 p-4 outline-none text-sm"
+          placeholder="Write honestly. This is just for you."
         />
         <div className="flex justify-end">
           <button
             onClick={saveEntry}
             disabled={saving || !content.trim()}
-            className= "px-4 py-2 rounded-xl bg-slate-900 text-white text-sm disabled:opacity-50"
+            className="px-4 py-2 rounded-xl bg-slate-900 text-white text-sm disabled:opacity-50"
           >
             {saving ? 'Saving…' : 'Save entry'}
           </button>
@@ -91,16 +91,16 @@ export default function JournalPage() {
         </h2>
 
         {entries.length === 0 && (
-          <p className= "text-xs text-slate-500">
+          <p className="text-xs text-slate-500">
             No entries yet. Your first one will appear here.
           </p>
         )}
 
-        <ul className= "space-y-2">
+        <ul className="space-y-2">
           {entries.map((e: any) => (
             <li
               key={e.id}
-              className= "rounded-xl border border-slate-200 bg-white p-3 text-sm"
+              className="rounded-xl border border-slate-200 bg-white p-3 text-sm"
             >
               <div className="text-[11px] text-slate-400">
                 {new Date(e.created_at).toLocaleString()}
