@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import useSWR from 'swr';
 
+
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export default function JournalPage() {
@@ -14,7 +15,7 @@ export default function JournalPage() {
 
   // list of entries
   const { data: entriesData, mutate: mutateEntries } = useSWR(
-    '/api/journal-entries',
+    '/api/entries',
     fetcher,
   );
 
@@ -25,7 +26,7 @@ export default function JournalPage() {
     if (!body) return;
 
     setSaving(true);
-    const res = await fetch('/api/journal-entries', {
+    const res = await fetch('/api/entries', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: body }),
