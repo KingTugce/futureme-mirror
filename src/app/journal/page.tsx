@@ -36,7 +36,7 @@ export default function JournalPage() {
     const payload = await res.json().catch(() => ({} as any));
 
     if (!res.ok) {
-      alert(payload.error ??  'Error saving entry');
+      alert(payload.error ??   'Error saving entry' );
       return;
     }
 
@@ -48,8 +48,8 @@ export default function JournalPage() {
   const today = new Date().toLocaleDateString();
 
   return (
-    <div className= "max-w-3xl mx-auto p-6 space-y-6">
-      <header className= "flex items-end justify-between">
+    <div className= "max-w-3xl mx-auto p-6 space-y-6" >
+      <header className= "flex items-end justify-between" >
         <div>
           <h1 className= "text-2xl font-semibold">Journal</h1>
           <p className= "text-sm text-slate-500">{today}</p>
