@@ -61,26 +61,26 @@ export default function JournalPage() {
         <p className= "text-xs uppercase tracking-wide text-slate-500" >
           Daily prompt
         </p>
-        <p className= "mt-1 text-slate-900">
+        <p className= "mt-1 text-slate-900" >
           {promptData?.text ?? '—'}
         </p>
       </section>
 
-      {/* New entry */}
-      <section className="space-y-2">
+      {/* New entry */} 
+      <section className= "space-y-2" >
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full min-h-[160px] rounded-2xl border border-slate-200 p-4 outline-none text-sm"
-          placeholder="Write honestly. This is just for you."
+          className= "w-full min-h-[160px] rounded-2xl border border-slate-200 p-4 outline-none text-sm"
+          placeholder= "Write honestly. This is just for you."
         />
-        <div className="flex justify-end">
+        <div className= "flex justify-end">
           <button
             onClick={saveEntry}
             disabled={saving || !content.trim()}
-            className="px-4 py-2 rounded-xl bg-slate-900 text-white text-sm disabled:opacity-50"
+            className= "px-4 py-2 rounded-xl bg-slate-900 text-white text-sm disabled:opacity-50"
           >
-            {saving ? 'Saving…' : 'Save entry'}
+            {saving ? 'Saving…' : 'Save entry' }
           </button>
         </div>
       </section>
