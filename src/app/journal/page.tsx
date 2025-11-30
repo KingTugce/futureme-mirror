@@ -51,17 +51,17 @@ export default function JournalPage() {
     <div className= "max-w-3xl mx-auto p-6 space-y-6" >
       <header className= "flex items-end justify-between" >
         <div>
-          <h1 className= "text-2xl font-semibold">Journal</h1>
-          <p className= "text-sm text-slate-500">{today}</p>
+          <h1 className= "text-2xl font-semibold" >Journal</h1>
+          <p className=  "text-sm text-slate-500" >{today}</p>
         </div>
       </header>
 
       {/* Daily prompt */}
-      <section className="rounded-2xl border border-slate-200 p-4 bg-white">
-        <p className="text-xs uppercase tracking-wide text-slate-500">
+      <section className= "rounded-2xl border border-slate-200 p-4 bg-white" >
+        <p className= "text-xs uppercase tracking-wide text-slate-500" >
           Daily prompt
         </p>
-        <p className="mt-1 text-slate-900">
+        <p className= "mt-1 text-slate-900">
           {promptData?.text ?? '—'}
         </p>
       </section>
