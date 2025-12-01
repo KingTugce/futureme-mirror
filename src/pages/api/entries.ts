@@ -11,12 +11,12 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   if (req.method === 'GET') {
-    // Always return an     empty list for now
+    // Always    return an     empty list for now
     return res.status(200).json({ entries: [] });
   }
 
   if (req.method === 'POST') {
-    // Always succeed, ignore body,    ignore DB
+    // Always   succeed, ignore body,    ignore DB
     return res.status(200).json({ ok: true });
   }
 
