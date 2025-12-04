@@ -18,19 +18,19 @@ const save = async () => {
   setSaving(true);
 
   const { error } = await supabase
-    .from('journal')               // <-- use journal(not entries)
+    .from('journal')               //  <-- use journal(not entries)
     .insert({
-      user_id: session.user.id,    // <-- required for RLS
-      content: text.trim(),        // <-- column is content (not content_text)
+      user_id: session.user.id,    //  <-- required for RLS
+      content: text.trim(),        //  <-- column is content (not content_text)
     });
 
   setSaving(false);
   if (error) return alert(error.message);
 
-  // redirect back to the list
+  //  redirect back to the list
   window.location.href = '/journal';
-  // (or if you’re using the App Router hook:)
-  // router.push('/journal') ;
+  //  (or if you’re using the App Router hook:)
+  //  router.push('/journal') ;
 };
   return (
     <div style={{maxWidth:640,margin:'3rem auto',display:'grid',gap:12}}>
