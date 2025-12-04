@@ -1,5 +1,5 @@
-// app/(auth)/sign-in/page.tsx — email+password next to magic link
-// -----------------------------
+//  app/(auth)/sign-in/page.tsx  —  email+password next to magic link
+//  -----------------------------
 'use client';
 import { useState } from 'react';
 import { createBrowserClient } from '@/lib/supabase/client';
