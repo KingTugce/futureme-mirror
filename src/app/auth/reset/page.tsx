@@ -1,4 +1,4 @@
-// app/(auth)/reset/page.tsx — password reset flow (Supabase built‑in)
+// app/(auth)/reset/page.tsx  —   password reset flow (Supabase built‑in)
 // -----------------------------
 'use client';
 import { useState } from 'react';
