@@ -14,7 +14,7 @@ export default function AuthPage() {
     setMsg('');
     const clean = email.trim();
     if (!/^\S+@\S+\.\S+$/.test(clean)) {
-      setMsg('Please enter a valid email.');
+      setMsg('Please enter a valid email. ');
       return;
     }
     setLoading(true);
