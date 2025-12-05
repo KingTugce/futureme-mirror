@@ -13,7 +13,7 @@ export default function JournalPage() {
   //    daily prompt
   const { data: promptData } = useSWR('/api/prompts/today', fetcher);
 
-  //.    list of entries
+  //    list of entries
   const { data: entriesData, mutate: mutateEntries } = useSWR(
     '/api/entries',
     fetcher,
