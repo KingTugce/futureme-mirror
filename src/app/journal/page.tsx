@@ -10,10 +10,10 @@ export default function JournalPage() {
   const [content, setContent] = useState('');
   const [saving, setSaving] = useState(false);
 
-  // daily prompt
+  //    daily prompt
   const { data: promptData } = useSWR('/api/prompts/today', fetcher);
 
-  // list of entries
+  //.    list of entries
   const { data: entriesData, mutate: mutateEntries } = useSWR(
     '/api/entries',
     fetcher,
