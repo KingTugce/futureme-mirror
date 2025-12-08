@@ -38,7 +38,7 @@ export default function QuickNote({ open, onClose }: Props) {
       return;
     }
 
-    // 1) save entry
+    //  1) save entry
     const { data: inserted, error: insertErr } = await supabase
       .from('journal')
       .insert({ content: text.trim() })
@@ -51,7 +51,7 @@ export default function QuickNote({ open, onClose }: Props) {
       return;
     }
 
-    // 2) kick reflection
+    //.  2) kick reflection
     try {
       await fetch('/api/reflect', {
         method: 'POST',
