@@ -1,6 +1,7 @@
 
 // -----------------------------
 // File: src/lib/supabase/server.ts
+
 //   lib/supabase/server.ts
 
 // -----------------------------
